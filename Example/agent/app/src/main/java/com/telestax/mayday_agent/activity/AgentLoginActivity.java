@@ -1,4 +1,3 @@
-
 /*
  * TeleStax, Open Source Cloud Communications
  * Copyright 2011-2016, Telestax Inc and individual contributors
@@ -41,13 +40,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.telestax.mayday_agent.R;
-import com.telestax.mayday_agent.utils.Constant;
+import com.telestax.mayday_agent.utils.AgentConstant;
 
 import java.util.HashMap;
 
 import timer.com.maydaysdk.MayDayRegister;
 
-public class LoginActivity extends AppCompatActivity implements MayDayRegister.MayDayRegisterInterface {
+public class AgentLoginActivity extends AppCompatActivity implements MayDayRegister.MayDayRegisterInterface {
+    private static final int TYPE_NOT_CONNECTED = 0;
+    private static final int TYPE_WIFI = 1;
+    private static final int TYPE_MOBILE = 2;
     private EditText mEditViewUserName, mEditViewPassword;
     private HashMap<String, Object> mParams;
     private SharedPreferences mPrefs;
@@ -55,9 +57,6 @@ public class LoginActivity extends AppCompatActivity implements MayDayRegister.M
     private AlertDialog mAlertDialog;
     private String mSetting = "";
     private Context mContext;
-    private static final int TYPE_NOT_CONNECTED = 0;
-    private static final int TYPE_WIFI = 1;
-    private static final int TYPE_MOBILE = 2;
     private SharedPreferences.Editor mLoginPrefsEditor;
     private MayDayRegister mMayDayRegister;
 
@@ -77,13 +76,13 @@ public class LoginActivity extends AppCompatActivity implements MayDayRegister.M
         mAlertDialog = new AlertDialog.Builder(this).create();
         mContext = getApplicationContext();
 
-        SharedPreferences loginPreferences = getSharedPreferences(Constant.MY_LOGIN_PREFS, MODE_PRIVATE);
+        SharedPreferences loginPreferences = getSharedPreferences(AgentConstant.MY_LOGIN_PREFS, MODE_PRIVATE);
         mLoginPrefsEditor = loginPreferences.edit();
 
-        Boolean saveLogin = loginPreferences.getBoolean(Constant.SAVE_LOGIN, false);
+        Boolean saveLogin = loginPreferences.getBoolean(AgentConstant.SAVE_LOGIN, false);
         if (saveLogin) {
-            mEditViewUserName.setText(loginPreferences.getString(Constant.USERNAME, ""));
-            mEditViewPassword.setText(loginPreferences.getString(Constant.PASSWORD, ""));
+            mEditViewUserName.setText(loginPreferences.getString(AgentConstant.USERNAME, ""));
+            mEditViewPassword.setText(loginPreferences.getString(AgentConstant.PASSWORD, ""));
             saveLoginCheckBox.setChecked(true);
         }
 
@@ -94,10 +93,10 @@ public class LoginActivity extends AppCompatActivity implements MayDayRegister.M
         mMayDayRegister.initialize(getApplicationContext());
 
         // Saving the domain ip address in SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences(Constant.MY_PREFS_NAME, MODE_PRIVATE);
-        String restoredDomainAddress = sharedPreferences.getString(Constant.DOMAIN, null);
+        SharedPreferences sharedPreferences = getSharedPreferences(AgentConstant.MY_PREFS_NAME, MODE_PRIVATE);
+        String restoredDomainAddress = sharedPreferences.getString(AgentConstant.DOMAIN, null);
         if (restoredDomainAddress != null) {
-            mSetting = sharedPreferences.getString(Constant.DOMAIN, "No name defined");//"No name defined" is the default value.
+            mSetting = sharedPreferences.getString(AgentConstant.DOMAIN, "No name defined");//"No name defined" is the default value.
         }
 
         // Login sign action
@@ -105,18 +104,18 @@ public class LoginActivity extends AppCompatActivity implements MayDayRegister.M
             @Override
             public void onClick(View v) {
                 if (mEditViewUserName.length() == 0) {
-                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.username_credential), Toast.LENGTH_LONG).show();
+                    Toast.makeText(AgentLoginActivity.this, getResources().getString(R.string.username_credential), Toast.LENGTH_LONG).show();
                 } else if (mEditViewPassword.length() == 0) {
-                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.password_credential), Toast.LENGTH_LONG).show();
+                    Toast.makeText(AgentLoginActivity.this, getResources().getString(R.string.password_credential), Toast.LENGTH_LONG).show();
                 } else if (mSetting.length() == 0) {
-                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.domain_address), Toast.LENGTH_LONG).show();
+                    Toast.makeText(AgentLoginActivity.this, getResources().getString(R.string.domain_address), Toast.LENGTH_LONG).show();
                 } else {
                     if (hasNoInternetConnection()) {
 
                         if (saveLoginCheckBox.isChecked()) {
-                            mLoginPrefsEditor.putBoolean(Constant.SAVE_LOGIN, true);
-                            mLoginPrefsEditor.putString(Constant.USERNAME, mEditViewUserName.getText().toString().trim());
-                            mLoginPrefsEditor.putString(Constant.PASSWORD, mEditViewPassword.getText().toString().trim());
+                            mLoginPrefsEditor.putBoolean(AgentConstant.SAVE_LOGIN, true);
+                            mLoginPrefsEditor.putString(AgentConstant.USERNAME, mEditViewUserName.getText().toString().trim());
+                            mLoginPrefsEditor.putString(AgentConstant.PASSWORD, mEditViewPassword.getText().toString().trim());
                             mLoginPrefsEditor.apply();
                         } else {
                             mLoginPrefsEditor.clear();
@@ -128,11 +127,11 @@ public class LoginActivity extends AppCompatActivity implements MayDayRegister.M
                         mParams.put("pref_sip_password", mPrefs.getString("pref_sip_password", mEditViewPassword.getText().toString().trim()));
                         // Register the device for video and chat incoming data
                         mMayDayRegister.createDevice(mParams, getApplicationContext(), AgentCallActivity.class);
-                        mProgressDialog = new ProgressDialog(LoginActivity.this);
+                        mProgressDialog = new ProgressDialog(AgentLoginActivity.this);
                         mProgressDialog.setMessage(getResources().getString(R.string.please_wait));
                         mProgressDialog.show();
                     } else {
-                        Toast.makeText(LoginActivity.this, getResources().getString(R.string
+                        Toast.makeText(AgentLoginActivity.this, getResources().getString(R.string
                                 .enable_internet), Toast.LENGTH_LONG).show();
                     }
                 }
@@ -145,8 +144,8 @@ public class LoginActivity extends AppCompatActivity implements MayDayRegister.M
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
-                final EditText editText = new EditText(LoginActivity.this);
+                AlertDialog.Builder alert = new AlertDialog.Builder(AgentLoginActivity.this);
+                final EditText editText = new EditText(AgentLoginActivity.this);
                 alert.setTitle(getResources().getString(R.string.domain));
                 alert.setView(editText);
 
@@ -157,8 +156,8 @@ public class LoginActivity extends AppCompatActivity implements MayDayRegister.M
                     public void onClick(DialogInterface dialog, int whichButton) {
 
                         mSetting = editText.getText().toString();
-                        SharedPreferences.Editor editor = getSharedPreferences(Constant.MY_PREFS_NAME, MODE_PRIVATE).edit();
-                        editor.putString(Constant.DOMAIN, mSetting);
+                        SharedPreferences.Editor editor = getSharedPreferences(AgentConstant.MY_PREFS_NAME, MODE_PRIVATE).edit();
+                        editor.putString(AgentConstant.DOMAIN, mSetting);
                         editor.apply();
                     }
                 });
@@ -177,17 +176,17 @@ public class LoginActivity extends AppCompatActivity implements MayDayRegister.M
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
     private void showAlert() {
 
-        if (!LoginActivity.this.isFinishing()) {
+        if (!AgentLoginActivity.this.isFinishing()) {
             mAlertDialog.setTitle(getResources().getString(R.string.error));
             mAlertDialog.setMessage(getResources().getString(R.string.register_failed));
             mAlertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(R.string.ok),
                     new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    MayDayRegister.mayDayShutDown();
-                    finish();
-                }
-            });
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            MayDayRegister.mayDayShutDown();
+                            finish();
+                        }
+                    });
             mAlertDialog.show();
         }
     }
@@ -231,7 +230,7 @@ public class LoginActivity extends AppCompatActivity implements MayDayRegister.M
 
         if (status) {
             //Register success navigate to MainActivity
-            Intent i = new Intent(LoginActivity.this, AgentDetailsActivity.class);
+            Intent i = new Intent(AgentLoginActivity.this, AgentDetailsActivity.class);
             startActivity(i);
             finish();
         } else {

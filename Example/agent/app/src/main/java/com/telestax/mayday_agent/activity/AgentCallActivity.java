@@ -1,4 +1,3 @@
-
 /*
  * TeleStax, Open Source Cloud Communications
  * Copyright 2011-2016, Telestax Inc and individual contributors
@@ -25,9 +24,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+
 import com.telestax.mayday_agent.R;
 import com.telestax.mayday_agent.fragment.AgentCallFragment;
-import com.telestax.mayday_agent.utils.Constant;
+import com.telestax.mayday_agent.utils.AgentConstant;
+
+import timer.com.maydaysdk.MayDayIconConfiguration;
 import timer.com.maydaysdk.MayDayMessageChatFragment;
 import timer.com.maydaysdk.MayDayVideoCallFragment;
 
@@ -71,12 +73,27 @@ public class AgentCallActivity extends AppCompatActivity implements MayDayVideoC
     }
 
     private Bundle getAgentDetails() {
-        SharedPreferences prefShare = getSharedPreferences(Constant.MY_PREFS_NAME, MODE_PRIVATE);
-        String domainAddress = prefShare.getString(Constant.DOMAIN, null);
-        String agentName = prefShare.getString(Constant.AGENT_NAME, null);
+
+        // Set video and chat icons to MayDay SDK view.
+        MayDayIconConfiguration maydayIcon = MayDayIconConfiguration.getInstance();
+        maydayIcon.setCallAnswerIcon(R.drawable.endcall_green);
+        maydayIcon.setCallHangIcon(R.drawable.call_icon);
+        maydayIcon.setMaximiseIcon(R.drawable.maximize);
+        maydayIcon.setMinimiseIcon(R.drawable.minimize);
+        maydayIcon.setMicOnIcon(R.drawable.speaker_icon);
+        maydayIcon.setMicOffIcon(R.drawable.speaker_mute);
+        maydayIcon.setChatMaximiseIcon(R.drawable.chat_maximize);
+        maydayIcon.setChatMinimiseIcon(R.drawable.chat_minimize);
+        maydayIcon.setChatCloseIcon(R.drawable.chat_close);
+        maydayIcon.setChatSendIcon(R.drawable.message_send);
+
+        SharedPreferences prefShare = getSharedPreferences(AgentConstant.MY_PREFS_NAME, MODE_PRIVATE);
+        String domainAddress = prefShare.getString(AgentConstant.DOMAIN, null);
+        String agentName = prefShare.getString(AgentConstant.AGENT_NAME, null);
         Bundle bundle = new Bundle();
-        bundle.putString(Constant.AGENT_NAME, agentName);
-        bundle.putString(Constant.DOMAIN_ADDRESS, domainAddress);
+        bundle.putString(AgentConstant.AGENT_NAME, agentName);
+        bundle.putString(AgentConstant.DOMAIN_ADDRESS, domainAddress);
+
         return bundle;
     }
 

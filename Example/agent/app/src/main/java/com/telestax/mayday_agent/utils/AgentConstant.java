@@ -1,4 +1,3 @@
-
 /*
  * TeleStax, Open Source Cloud Communications
  * Copyright 2011-2016, Telestax Inc and individual contributors
@@ -17,19 +16,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package com.telestax.mayday_customer.utils;
+package com.telestax.mayday_agent.utils;
 
-
-public class Constant {
-    public static String MY_PREFS_NAME="MyPrefsFile";
-    public static String MY_MAYDAY_PREFS_NAME="MyMayDayPrefsFile";
-    public static String ACTION="action";
-    public static String DOMAIN="domain";
-    public static String YES="Yes";
-    public static String NO="No";
-    public static String AGENT_NAME="agentName";
-    public static String DOMAIN_ADDRESS="domainAddress";
-    public static String VIDEO_CALL="videoCall";
-    public static String OUTGOING="OutGoing";
-    public static String BROADCAST_INTENT="mayday-initialized";
+public class AgentConstant {
+    public static String MY_PREFS_NAME = "MyPrefsFile";
+    public static String MY_LOGIN_PREFS = "loginPrefs";
+    public static String SAVE_LOGIN = "saveLogin";
+    public static String USERNAME = "username";
+    public static String PASSWORD = "password";
+    public static String DOMAIN = "domain";
+    public static String AGENT_NAME = "agentName";
+    public static String DOMAIN_ADDRESS = "domainAddress";
 }

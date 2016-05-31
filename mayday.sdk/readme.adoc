@@ -88,8 +88,26 @@ messageChatFragment.setArguments(chatBundle);
 FragmentManager  mFragmentManagerMayDay.beginTransaction().replace(R.id.fragment_mayday, messageChatFragment).commit();
 ----
  
+*MayDayIconConfiguration*
+
+Set video and chat icons to MayDay SDK view.
+
+----
+ MayDayIconConfiguration maydayIcon = MayDayIconConfiguration.getInstance();
+        maydayIcon.setCallAnswerIcon(R.drawable.endcall_green);
+        maydayIcon.setCallHangIcon(R.drawable.call_icon);
+        maydayIcon.setMaximiseIcon(R.drawable.maximize);
+        maydayIcon.setMinimiseIcon(R.drawable.minimize);
+        maydayIcon.setMicOnIcon(R.drawable.speaker_icon);
+        maydayIcon.setMicOffIcon(R.drawable.speaker_mute);
+        maydayIcon.setChatMaximiseIcon(R.drawable.chat_maximize);
+        maydayIcon.setChatMinimiseIcon(R.drawable.chat_minimize);
+        maydayIcon.setChatCloseIcon(R.drawable.chat_close);
+        maydayIcon.setChatSendIcon(R.drawable.message_send);
+---- 
+
  
-*Permission in manifest.xml*
+*Permission in manifest.xml* 
 
 ----
 <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/> 

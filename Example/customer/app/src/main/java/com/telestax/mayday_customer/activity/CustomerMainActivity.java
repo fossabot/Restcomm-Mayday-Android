@@ -31,15 +31,16 @@ import android.support.v7.app.AppCompatActivity;
 import com.telestax.mayday_customer.R;
 import com.telestax.mayday_customer.fragment.CustomerOfferFragment;
 import com.telestax.mayday_customer.fragment.CustomerSupportFragment;
-import com.telestax.mayday_customer.fragment.ProductFragment;
-import com.telestax.mayday_customer.utils.Constant;
+import com.telestax.mayday_customer.fragment.CustomerProductFragment;
+import com.telestax.mayday_customer.utils.CustomerConstant;
 
+import timer.com.maydaysdk.MayDayIconConfiguration;
 import timer.com.maydaysdk.MayDayMessageChatFragment;
 import timer.com.maydaysdk.MayDayRegister;
 import timer.com.maydaysdk.MayDayVideoCallFragment;
 
-public class MainActivity extends AppCompatActivity implements CustomerOfferFragment.CustomerOfferInterface,
-        ProductFragment.ProductInterface, MayDayVideoCallFragment.VideoCallInterface,
+public class CustomerMainActivity extends AppCompatActivity implements CustomerOfferFragment.CustomerOfferInterface,
+        CustomerProductFragment.ProductInterface, MayDayVideoCallFragment.VideoCallInterface,
         CustomerSupportFragment.CustomerSupportInterface, MayDayMessageChatFragment.MessageChatInterface {
 
     private FragmentManager mFragmentManagerContent;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements CustomerOfferFrag
 
         mFragmentManagerContent = getSupportFragmentManager();
         mFragmentManagerMayDay = getSupportFragmentManager();
-        maydaySharePref(this, Constant.NO);
+        maydaySharePref(this, CustomerConstant.NO);
         showProductFragment();
     }
 
@@ -64,13 +65,12 @@ public class MainActivity extends AppCompatActivity implements CustomerOfferFrag
 
     private void showProductFragment() {
         mFragmentManagerContent.beginTransaction()
-                .replace(R.id.fragment_content, new ProductFragment()).commit();
+                .replace(R.id.fragment_content, new CustomerProductFragment()).commit();
     }
 
     private void showCustomerSupportFragment() {
         mFragmentManagerContent.beginTransaction()
                 .replace(R.id.fragment_content, new CustomerSupportFragment()).addToBackStack(null).commit();
-
     }
 
     private void showCustomerOfferFragment() {
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements CustomerOfferFrag
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        maydaySharePref(this, Constant.NO);
+        maydaySharePref(this, CustomerConstant.NO);
         // The activity is about to be destroyed restcomm connection.
         MayDayRegister.mayDayShutDown();
 
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements CustomerOfferFrag
     @Override
     public void onVideoCall() {
 
-        maydaySharePref(this, Constant.YES);
+        maydaySharePref(this, CustomerConstant.YES);
         Bundle videoBundle = getAgentDetails();
 
         MayDayVideoCallFragment videoCallFragment = new MayDayVideoCallFragment();
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements CustomerOfferFrag
 
     @Override
     public void onChatMessage() {
-        maydaySharePref(this, Constant.YES);
+        maydaySharePref(this, CustomerConstant.YES);
         Bundle chatBundle = getAgentDetails();
 
         MayDayMessageChatFragment messageChatFragment = new MayDayMessageChatFragment();
@@ -124,13 +124,28 @@ public class MainActivity extends AppCompatActivity implements CustomerOfferFrag
     }
 
     private Bundle getAgentDetails() {
-        SharedPreferences prefShare = getSharedPreferences(Constant.MY_PREFS_NAME, MODE_PRIVATE);
-        String domainAddress = prefShare.getString(Constant.DOMAIN, null);
-        String agentName = prefShare.getString(Constant.AGENT_NAME, null);
+
+        // Set video and chat icons to MayDay SDK view.
+        MayDayIconConfiguration maydayIcon = MayDayIconConfiguration.getInstance();
+        maydayIcon.setCallAnswerIcon(R.drawable.endcall_green);
+        maydayIcon.setCallHangIcon(R.drawable.call_icon);
+        maydayIcon.setMaximiseIcon(R.drawable.maximize);
+        maydayIcon.setMinimiseIcon(R.drawable.minimize);
+        maydayIcon.setMicOnIcon(R.drawable.speaker_icon);
+        maydayIcon.setMicOffIcon(R.drawable.speaker_mute);
+        maydayIcon.setChatMaximiseIcon(R.drawable.chat_maximize);
+        maydayIcon.setChatMinimiseIcon(R.drawable.chat_minimize);
+        maydayIcon.setChatCloseIcon(R.drawable.chat_close);
+        maydayIcon.setChatSendIcon(R.drawable.message_send);
+
+        SharedPreferences prefShare = getSharedPreferences(CustomerConstant.MY_PREFS_NAME, MODE_PRIVATE);
+        String domainAddress = prefShare.getString(CustomerConstant.DOMAIN, null);
+        String agentName = prefShare.getString(CustomerConstant.AGENT_NAME, null);
         Bundle bundle = new Bundle();
-        bundle.putString(Constant.AGENT_NAME, agentName);
-        bundle.putString(Constant.DOMAIN_ADDRESS, domainAddress);
-        bundle.putString(Constant.VIDEO_CALL, Constant.OUTGOING);
+        bundle.putString(CustomerConstant.AGENT_NAME, agentName);
+        bundle.putString(CustomerConstant.DOMAIN_ADDRESS, domainAddress);
+        bundle.putString(CustomerConstant.VIDEO_CALL, CustomerConstant.OUTGOING);
+
         return bundle;
     }
 
@@ -141,22 +156,22 @@ public class MainActivity extends AppCompatActivity implements CustomerOfferFrag
 
     @Override
     public void onMayDayClose() {
-      LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constant.BROADCAST_INTENT));
-            maydaySharePref(this, Constant.NO);
+      LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(CustomerConstant.BROADCAST_INTENT));
+            maydaySharePref(this, CustomerConstant.NO);
             mFragmentManagerMayDay.beginTransaction().
                     remove(getSupportFragmentManager().findFragmentById(R.id.fragment_mayday)).commit();
     }
 
     private static void maydaySharePref(Context context, String data) {
 
-        SharedPreferences.Editor editor = context.getSharedPreferences(Constant.MY_MAYDAY_PREFS_NAME, MODE_PRIVATE).edit();
-        editor.putString(Constant.ACTION, data);
+        SharedPreferences.Editor editor = context.getSharedPreferences(CustomerConstant.MY_MAYDAY_PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putString(CustomerConstant.ACTION, data);
         editor.apply();
     }
 
     public static String getMaydaySharePref(Context context) {
-        SharedPreferences prefShare = context.getSharedPreferences(Constant.MY_MAYDAY_PREFS_NAME, MODE_PRIVATE);
-        String restoredValue = prefShare.getString(Constant.ACTION, null);
+        SharedPreferences prefShare = context.getSharedPreferences(CustomerConstant.MY_MAYDAY_PREFS_NAME, MODE_PRIVATE);
+        String restoredValue = prefShare.getString(CustomerConstant.ACTION, null);
         return restoredValue;
     }
 }

@@ -39,10 +39,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.telestax.mayday_customer.R;
-import com.telestax.mayday_customer.activity.MainActivity;
-import com.telestax.mayday_customer.utils.Constant;
+import com.telestax.mayday_customer.activity.CustomerMainActivity;
+import com.telestax.mayday_customer.utils.CustomerConstant;
 
-public class ProductFragment extends Fragment implements View.OnClickListener {
+public class CustomerProductFragment extends Fragment implements View.OnClickListener {
 
     private ImageView mImageViewCustomerMayDayCall;
     private LinearLayout mDotsLayout;
@@ -96,7 +96,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener {
         };
 
         //Register broadcast receiver
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mInitReceiver, new IntentFilter(Constant.BROADCAST_INTENT));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mInitReceiver, new IntentFilter(CustomerConstant.BROADCAST_INTENT));
 
         // Initialize UI
         ImageView ImageViewProductOne = (ImageView) viewInfo.findViewById(R.id.imageView_product);
@@ -117,9 +117,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener {
         ImageViewProductSix.setOnClickListener(this);
         ImageViewProductSeven.setOnClickListener(this);
 
-        String mayDayAction = MainActivity.getMaydaySharePref(getActivity());
+        String mayDayAction = CustomerMainActivity.getMaydaySharePref(getActivity());
         if (mayDayAction != null) {
-            if (mayDayAction.equalsIgnoreCase(Constant.YES)) {
+            if (mayDayAction.equalsIgnoreCase(CustomerConstant.YES)) {
                 mImageViewCustomerMayDayCall.setVisibility(View.INVISIBLE);
             } else {
                 mImageViewCustomerMayDayCall.setVisibility(View.VISIBLE);

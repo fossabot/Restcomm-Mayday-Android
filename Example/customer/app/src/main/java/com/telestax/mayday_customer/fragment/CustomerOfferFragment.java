@@ -35,8 +35,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.telestax.mayday_customer.R;
-import com.telestax.mayday_customer.activity.MainActivity;
-import com.telestax.mayday_customer.utils.Constant;
+import com.telestax.mayday_customer.activity.CustomerMainActivity;
+import com.telestax.mayday_customer.utils.CustomerConstant;
 
 public class CustomerOfferFragment extends Fragment implements View.OnClickListener {
 
@@ -61,9 +61,9 @@ public class CustomerOfferFragment extends Fragment implements View.OnClickListe
         mImageViewCustomerMayDayCall.setOnClickListener(this);
         imageViewCustomerOfferBack.setOnClickListener(this);
 
-        String mayDayAction = MainActivity.getMaydaySharePref(getActivity());
+        String mayDayAction = CustomerMainActivity.getMaydaySharePref(getActivity());
         if (mayDayAction != null) {
-            if (mayDayAction.equalsIgnoreCase(Constant.YES)) {
+            if (mayDayAction.equalsIgnoreCase(CustomerConstant.YES)) {
                 mImageViewCustomerMayDayCall.setVisibility(View.INVISIBLE);
             } else {
                 mImageViewCustomerMayDayCall.setVisibility(View.VISIBLE);
@@ -79,7 +79,7 @@ public class CustomerOfferFragment extends Fragment implements View.OnClickListe
         };
 
         //Register broadcast receiver
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mInitReceiver, new IntentFilter(Constant.BROADCAST_INTENT));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mInitReceiver, new IntentFilter(CustomerConstant.BROADCAST_INTENT));
 
 
         return viewInfo;
