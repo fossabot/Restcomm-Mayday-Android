@@ -1,4 +1,3 @@
-
 /*
  * TeleStax, Open Source Cloud Communications
  * Copyright 2011-2016, Telestax Inc and individual contributors
@@ -37,6 +36,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
 import org.mobicents.restcomm.android.client.sdk.RCClient;
 import org.mobicents.restcomm.android.client.sdk.RCConnection;
 import org.mobicents.restcomm.android.client.sdk.RCConnectionListener;
@@ -45,6 +45,7 @@ import org.mobicents.restcomm.android.sipua.impl.DeviceImpl;
 import org.webrtc.VideoRenderer;
 import org.webrtc.VideoRendererGui;
 import org.webrtc.VideoTrack;
+
 import java.util.HashMap;
 
 public class MayDayVideoCallFragment extends Fragment implements RCConnectionListener, View.OnClickListener {
@@ -66,7 +67,9 @@ public class MayDayVideoCallFragment extends Fragment implements RCConnectionLis
     private static final int REMOTE_HEIGHT = 100;
     //  SharedPreferences prefs;
     private static final String TAG = "MayDayVideoCallFragment";
+    public static String INCOMING_CALL = RCDevice.INCOMING_CALL;
     private final HashMap<String, Object> mConnectParams = new HashMap<>();
+    MayDayIconConfiguration mMayIcon;
     private GLSurfaceView mVideoView;
     private VideoRenderer.Callbacks mLocalRender = null;
     private VideoRenderer.Callbacks mRemoteRender = null;
@@ -77,13 +80,12 @@ public class MayDayVideoCallFragment extends Fragment implements RCConnectionLis
     private boolean mMuteAudio = false;
     private LinearLayout mLinearLayoutControls, mLinearLayoutVideo;
     private ImageView mImageViewMute, mImageViewFullScreen, mImageViewAnswer;
-    private boolean isVideoFullScreen=false;
+    private boolean isVideoFullScreen = false;
     private AlertDialog mAlertDialog;
     private VideoCallInterface mCallback;
     private String mAgentName, mDomainAddress, mVideoCall;
-    public static String INCOMING_CALL = RCDevice.INCOMING_CALL;
-    private int LEFT_MARGIN=25;
-    private int TOP_MARGIN=75;
+    private int LEFT_MARGIN = 25;
+    private int TOP_MARGIN = 75;
 
     @Override
     public void onAttach(Activity activity) {
@@ -111,23 +113,29 @@ public class MayDayVideoCallFragment extends Fragment implements RCConnectionLis
         mImageViewAnswer.setOnClickListener(this);
 
         Bundle bundle = getArguments();
-        if(bundle.getString(MayDayConstant.AGENT_NAME)!=null) {
+        if (bundle.getString(MayDayConstant.AGENT_NAME) != null) {
             mAgentName = bundle.getString(MayDayConstant.AGENT_NAME);
         }
 
-        if(bundle.getString(MayDayConstant.DOMAIN_ADDRESS)!=null) {
+        if (bundle.getString(MayDayConstant.DOMAIN_ADDRESS) != null) {
             mDomainAddress = bundle.getString(MayDayConstant.DOMAIN_ADDRESS);
         }
 
-        if(bundle.getString(MayDayConstant.VIDEO_CALL)!=null) {
+        if (bundle.getString(MayDayConstant.VIDEO_CALL) != null) {
             mVideoCall = bundle.getString(MayDayConstant.VIDEO_CALL);
         }
+
+        // Get video icons from app level.
+        mMayIcon = MayDayIconConfiguration.getInstance();
+
+        imageViewHang.setImageResource(mMayIcon.getCallHangIcon());
+        mImageViewAnswer.setImageResource(mMayIcon.getCallAnswerIcon());
 
         try {
             //get last device register name
             mDevice = RCClient.listDevices().get(0);
         } catch (NullPointerException e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
 
         mScalingType = VideoRendererGui.ScalingType.SCALE_ASPECT_FILL;
@@ -177,7 +185,6 @@ public class MayDayVideoCallFragment extends Fragment implements RCConnectionLis
                         break;
                 }
                 return true;
-
             }
         });
 
@@ -215,7 +222,7 @@ public class MayDayVideoCallFragment extends Fragment implements RCConnectionLis
                 // incoming ringing
                 mPendingConnection.reject();
                 mPendingConnection = null;
-               // mLinearLayoutControls.setVisibility(View.INVISIBLE);
+                // mLinearLayoutControls.setVisibility(View.INVISIBLE);
 
             } else {
                 if (mConnection != null) {
@@ -228,7 +235,7 @@ public class MayDayVideoCallFragment extends Fragment implements RCConnectionLis
                     Log.e(TAG, "Error: not connected/connecting/pending");
                 }
             }
-             mCallback.onMayDayClose();
+            mCallback.onMayDayClose();
         } else if (view.getId() == R.id.imageView_answer) {
             // Tap on answer button accept the call
             if (mPendingConnection != null) {
@@ -244,9 +251,9 @@ public class MayDayVideoCallFragment extends Fragment implements RCConnectionLis
             //Tap on mute disable and enable mic
             if (mConnection != null) {
                 if (!mMuteAudio) {
-                    mImageViewMute.setImageResource(R.drawable.speaker_mute);
+                    mImageViewMute.setImageResource(mMayIcon.getMicOffIcon());
                 } else {
-                    mImageViewMute.setImageResource(R.drawable.speaker_icon);
+                    mImageViewMute.setImageResource(mMayIcon.getMicOnIcon());
                 }
                 mMuteAudio = !mMuteAudio;
                 mConnection.setAudioMuted(mMuteAudio);
@@ -256,7 +263,7 @@ public class MayDayVideoCallFragment extends Fragment implements RCConnectionLis
             int height = getScreenResolution();
             if (!isVideoFullScreen) {
                 isVideoFullScreen = true;
-                mImageViewFullScreen.setImageResource(R.drawable.minimize);
+                mImageViewFullScreen.setImageResource(mMayIcon.getMinimiseIcon());
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT);
@@ -265,7 +272,7 @@ public class MayDayVideoCallFragment extends Fragment implements RCConnectionLis
                 mLinearLayoutVideo.setLayoutParams(layoutParams);
                 mLinearLayoutVideo.setPadding(0, 0, 0, 0);
             } else {
-                mImageViewFullScreen.setImageResource(R.drawable.maximize);
+                mImageViewFullScreen.setImageResource(mMayIcon.getMaximiseIcon());
                 isVideoFullScreen = false;
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -353,6 +360,8 @@ public class MayDayVideoCallFragment extends Fragment implements RCConnectionLis
     // When video call get connected stop the ringing sound and display the video view.
     public void onConnected(RCConnection connection) {
         Log.i(TAG, "RCConnection connected");
+        mImageViewMute.setImageResource(mMayIcon.getMicOnIcon());
+        mImageViewFullScreen.setImageResource(mMayIcon.getMaximiseIcon());
         mImageViewFullScreen.setVisibility(View.VISIBLE);
         mImageViewMute.setVisibility(View.VISIBLE);
         // reset to no mute at beginning of new videoChat.
@@ -456,7 +465,7 @@ public class MayDayVideoCallFragment extends Fragment implements RCConnectionLis
             // incoming ringing
             mPendingConnection.reject();
             mPendingConnection = null;
-           // mLinearLayoutControls.setVisibility(View.INVISIBLE);
+            // mLinearLayoutControls.setVisibility(View.INVISIBLE);
 
         } else {
             if (mConnection != null) {

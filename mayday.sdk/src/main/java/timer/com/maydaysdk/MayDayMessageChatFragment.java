@@ -1,4 +1,3 @@
-
 /*
  * TeleStax, Open Source Cloud Communications
  * Copyright 2011-2016, Telestax Inc and individual contributors
@@ -38,10 +37,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import org.mobicents.restcomm.android.client.sdk.RCClient;
 import org.mobicents.restcomm.android.client.sdk.RCDevice;
-
 import java.util.HashMap;
 
 /**
@@ -53,18 +50,19 @@ import java.util.HashMap;
 public class MayDayMessageChatFragment extends Fragment implements View.OnClickListener,
         MayDayMessageListFragment.Callbacks {
 
+    public static String INCOMING_MESSAGE = RCDevice.INCOMING_MESSAGE;
+    private static MayDayMessageListFragment mListFragment;
+    private final HashMap<String, Object> mMessageParams = new HashMap<>();
+    private MayDayIconConfiguration mMayIcon;
     private TextView mTextViewAgentName;
     private EditText mEditTextChatMessage;
     private LinearLayout mLinearLayoutMessage;
     private boolean isChatFullScreen = false;
     private ImageButton mImageButtonChatResize;
     private AlertDialog mAlertDialog;
-    private final HashMap<String, Object> mMessageParams = new HashMap<>();
     private RCDevice mDevice;
-    private static MayDayMessageListFragment mListFragment;
     private MessageChatInterface mCallBackInterface;
-    public static String INCOMING_MESSAGE = RCDevice.INCOMING_MESSAGE;
-    private int MARGIN_TOP=75;
+    private int MARGIN_TOP = 75;
 
     @Override
     public void onAttach(Activity activity) {
@@ -133,14 +131,21 @@ public class MayDayMessageChatFragment extends Fragment implements View.OnClickL
         });
 
         Bundle bundle = getArguments();
-        String agentName="",domainAddress="";
+        String agentName = "", domainAddress = "";
         // Get the event data from the fragment, which pass agent name and domain address
-        if(bundle.getString(MayDayConstant.AGENT_NAME)!=null) {
+        if (bundle.getString(MayDayConstant.AGENT_NAME) != null) {
             agentName = bundle.getString(MayDayConstant.AGENT_NAME);
         }
-        if(bundle.getString(MayDayConstant.DOMAIN_ADDRESS)!=null) {
+        if (bundle.getString(MayDayConstant.DOMAIN_ADDRESS) != null) {
             domainAddress = bundle.getString(MayDayConstant.DOMAIN_ADDRESS);
         }
+
+        // Get chat icons from app level.
+        mMayIcon = MayDayIconConfiguration.getInstance();
+        mImageButtonChatResize.setImageResource(mMayIcon.getChatMaximiseIcon());
+        imageButtonChatClose.setImageResource(mMayIcon.getChatCloseIcon());
+        imageButtonChatSend.setImageResource(mMayIcon.getChatSendIcon());
+
         initializeChat(agentName, domainAddress);
 
         return viewInfo;
@@ -197,7 +202,7 @@ public class MayDayMessageChatFragment extends Fragment implements View.OnClickL
             int height = getScreenResolution();
             if (!isChatFullScreen) {
                 isChatFullScreen = true;
-                mImageButtonChatResize.setImageResource(R.drawable.chat_minimize);
+                mImageButtonChatResize.setImageResource(mMayIcon.getChatMinimiseIcon());
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT);
@@ -206,7 +211,7 @@ public class MayDayMessageChatFragment extends Fragment implements View.OnClickL
                 mLinearLayoutMessage.setLayoutParams(layoutParams);
                 mLinearLayoutMessage.setPadding(0, 0, 0, 0);
             } else {
-                mImageButtonChatResize.setImageResource(R.drawable.chat_maximize);
+                mImageButtonChatResize.setImageResource(mMayIcon.getChatMaximiseIcon());
                 isChatFullScreen = false;
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -225,6 +230,7 @@ public class MayDayMessageChatFragment extends Fragment implements View.OnClickL
             mCallBackInterface.onMayDayClose();
         }
     }
+
     //Hide device keyboard when it is visible
     private void hideSoftKeyboard(Activity activity) {
         if (activity.getCurrentFocus() != null) {

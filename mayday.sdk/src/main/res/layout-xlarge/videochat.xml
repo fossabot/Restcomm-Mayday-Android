@@ -21,14 +21,13 @@
             android:layout_height="70dp"
             android:layout_marginLeft="40dp"
             android:visibility="gone"
-            android:src="@drawable/endcall_green" />
+            />
 
         <ImageView
             android:id="@+id/imageView_fullscreen"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginLeft="40dp"
-            android:src="@drawable/maximize"
             android:visibility="gone" />
 
 
@@ -37,15 +36,14 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginLeft="40dp"
-            android:src="@drawable/speaker_icon" />
-
+            />
 
         <ImageView
             android:id="@+id/imageView_hangup"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginLeft="40dp"
-            android:src="@drawable/call_icon" />
+            />
     </LinearLayout>
 
     <LinearLayout

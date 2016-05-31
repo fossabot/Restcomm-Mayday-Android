@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
-                android:src="@drawable/chat_close" />
+                 />
 
             <ImageButton
                 android:id="@+id/imageButton_chat_resize"
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toStartOf="@+id/imageButton_chat_close"
-                android:src="@drawable/chat_maximize" />
+               />
         </RelativeLayout>
 
         <View
@@ -107,7 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:src="@drawable/message_send" />
+            />
     </LinearLayout>
 
 </RelativeLayout>

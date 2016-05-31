@@ -1,4 +1,3 @@
-
 /*
  * TeleStax, Open Source Cloud Communications
  * Copyright 2011-2016, Telestax Inc and individual contributors
@@ -39,6 +38,11 @@ public class MayDayRegister implements RCDeviceListener {
     private static final String TAG = "MayDayRegister";
     private MayDayRegisterInterface mCallBack;
 
+    public static void mayDayShutDown() {
+        // Shutdown RCClient
+        RCClient.shutdown();
+    }
+
     public void initialize(Context context) {
 
         //set RCClient setLogLevel
@@ -59,11 +63,6 @@ public class MayDayRegister implements RCDeviceListener {
         RCDevice device = RCClient.createDevice(params, this);
         assert device != null;
         device.setPendingIntents(new Intent(context, activityClass));
-    }
-
-    public static void mayDayShutDown() {
-        // Shutdown RCClient
-        RCClient.shutdown();
     }
 
     @Override

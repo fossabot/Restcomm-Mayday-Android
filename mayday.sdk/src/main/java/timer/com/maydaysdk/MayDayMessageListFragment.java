@@ -1,4 +1,3 @@
-
 /*
  * TeleStax, Open Source Cloud Communications
  * Copyright 2011-2016, Telestax Inc and individual contributors
@@ -32,15 +31,13 @@ import java.util.Map;
 
 
 public class MayDayMessageListFragment extends ListFragment {
-    private SimpleAdapter mListViewAdapter;
-    private ArrayList<Map<String, String>> mContactList;
-
     /**
      * The serialization (saved instance state) Bundle key representing the
      * activated item position. Only used on tablets.
      */
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
-
+    private SimpleAdapter mListViewAdapter;
+    private ArrayList<Map<String, String>> mContactList;
     /**
      * The fragment's current callback object, which is notified of list item
      * clicks.
@@ -51,20 +48,6 @@ public class MayDayMessageListFragment extends ListFragment {
      * The current activated item position. Only used on tablets.
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
-
-    /**
-     * A callback interface that all activities containing this fragment must
-     * implement. This mechanism allows activities to be notified of item
-     * selections.
-     */
-    public interface Callbacks {
-        /**
-         * Callback for when an item has been selected.
-         */
-        //public void onItemSelected(HashMap<String, String> contact, ContactSelectionType type);
-        //public void onContactUpdate(HashMap<String, String> contact, int type);
-    }
-
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -171,6 +154,19 @@ public class MayDayMessageListFragment extends ListFragment {
         mContactList.add(item);
         this.mListViewAdapter.notifyDataSetChanged();
         getListView().setSelection(mListViewAdapter.getCount() - 1);
+    }
+
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callbacks {
+        /**
+         * Callback for when an item has been selected.
+         */
+        //public void onItemSelected(HashMap<String, String> contact, ContactSelectionType type);
+        //public void onContactUpdate(HashMap<String, String> contact, int type);
     }
 
 

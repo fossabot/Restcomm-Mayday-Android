@@ -19,19 +19,19 @@
 package timer.com.maydaysdk;
 
 public class MayDayConstant {
-    public static String USERNAME= "username";
-    public static String AGENT_NAME= "agentName";
-    public static String DOMAIN_ADDRESS= "domainAddress";
-    public static String VIDEO_CALL= "videoCall";
-    public static String INCOMING= "incoming";
-    public static String OUTGOING= "outGoing";
-    public static String MESSAGE_TEXT= "message-text";
-    public static String VIDEO_ENABLE= "video-enabled";
-    public static String SIP= "sip:";
-    public static String SIPAT= "@";
-    public static int SIZE_LARGE= 600;
-    public static int SIZE_NORMAL= 500;
-    public static int SIZE_SMALL= 200;
-    public static int SIZE_XLARGE= 400;
-    public static String CHAT_CLOSE_ENCRYPT_KEY= "pYEDqOxOB35F7Pqp0QFwUNzAgCaiUBun";
+    public static String USERNAME = "username";
+    public static String AGENT_NAME = "agentName";
+    public static String DOMAIN_ADDRESS = "domainAddress";
+    public static String VIDEO_CALL = "videoCall";
+    public static String INCOMING = "incoming";
+    public static String OUTGOING = "outGoing";
+    public static String MESSAGE_TEXT = "message-text";
+    public static String VIDEO_ENABLE = "video-enabled";
+    public static String SIP = "sip:";
+    public static String SIPAT = "@";
+    public static int SIZE_LARGE = 600;
+    public static int SIZE_NORMAL = 500;
+    public static int SIZE_SMALL = 200;
+    public static int SIZE_XLARGE = 400;
+    public static String CHAT_CLOSE_ENCRYPT_KEY = "pYEDqOxOB35F7Pqp0QFwUNzAgCaiUBun";
 }
